@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('checkout') {
       steps {
-        checkout scm
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], browser: [$class: 'GithubWeb', repoUrl: 'https://github.com/joseluisrodriguez3/twotierterraform'], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jose-luis.rodriguez3', url: 'https://github.com/joseluisrodriguez3/twotierterraform.git']]])
         sh 'docker pull hashicorp/terraform:light'
       }
     }
