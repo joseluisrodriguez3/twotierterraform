@@ -2,6 +2,13 @@
 provider "aws" {
   region = "${var.aws_region}"
 }
+terraform {
+  backend "s3" {
+    bucket = "jrodrigu-terraform-state"
+    key    = "terraform/dev/terraform_dev.tfstate"
+    region = "us-east-1"
+  }
+}
 
 # Create a VPC to launch our instances into
 resource "aws_vpc" "default" {
