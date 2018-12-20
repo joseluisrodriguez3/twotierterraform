@@ -39,4 +39,19 @@ pipeline {
       }
     }
   }
+  post {
+       always {
+          echo "Terraform pipeline complete"
+       }
+       failure {
+          echo "Pipeline failed"
+          mail body: 'pipeline failed', subject: 'Pipeline failed!',
+             to: 'jose-luis.rodriguez3@hpe.com'
+        }
+        success {
+          echo "Build succeeded"
+          mail body: 'pipeline succeeded', subject: 'Pipeline Succeeded',
+             to: 'jose-luis.rodriguez3@hpe.com'
+        }
+    }
 }
