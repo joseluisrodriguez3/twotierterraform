@@ -1,7 +1,9 @@
 # Specify the provider and access details
+# No need for setting credentials like:
+#   access_key = "${var.access_key}"
+#   secret_key = "${var.secret_key}"
+# Credentials are taken from environment variables.
 provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
   region = "${var.aws_region}"
 }
 terraform {
