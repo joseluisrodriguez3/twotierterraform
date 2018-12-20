@@ -19,7 +19,8 @@ pipeline {
     }
     stage('plan') {
       steps {
-        sh 'terraform plan -var AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} -var AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}'
+        # Credentials taken from environment directly
+        sh 'terraform plan'
       }
     }
     stage('approval') {
@@ -32,7 +33,7 @@ pipeline {
     }
     stage('apply') {
       steps {
-        sh 'terraform apply -auto-approve -var AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} -var AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}'
+        sh 'terraform apply -auto-approve'
         cleanWs()
       }
     }
