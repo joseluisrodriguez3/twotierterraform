@@ -1,5 +1,7 @@
 pipeline {
-  agent none
+  agent {
+        label 'jenkins-fargate-terraform-docker'
+  }
   environment {
         AWS_ACCESS_KEY_ID     = credentials('terraform-master-aws-secret-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('terraform-master-aws-secret-access-key')
@@ -8,27 +10,19 @@ pipeline {
     stage('checkout') {
       steps {
         git credentialsId: 'jose-luis.rodriguez3', url: 'https://github.com/joseluisrodriguez3/twotierterraform.git'
-        sh 'docker pull hashicorp/terraform:light'
       }
     }
     stage('init') {
-      agent any
       steps {
-        sh 'docker run -w /app -v /root/.aws:/root/.aws -v `pwd`:/app hashicorp/terraform:light init'
+        sh 'terraform init'
       }
     }
     stage('plan') {
-      agent {
-        label 'jenkins-fargate-terraform-docker'
-      }
       steps {
-        sh 'docker run -w /app -v /root/.aws:/root/.aws -v `pwd`:/app hashicorp/terraform:light plan'
+        sh 'terraform plan -var AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} -var AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}'
       }
     }
     stage('approval') {
-      agent {
-        label 'jenkins-fargate-terraform-docker'
-      }
       options {
         timeout(time: 1, unit: 'HOURS') 
       }
@@ -37,11 +31,8 @@ pipeline {
       }
     }
     stage('apply') {
-      agent {
-        label 'jenkins-fargate-terraform-docker'
-      }
       steps {
-        sh 'docker run -w /app -v /root/.aws:/root/.aws -v `pwd`:/app hashicorp/terraform:light apply -auto-approve'
+        sh 'terraform apply -auto-approve -var AWS_ACCESS_KEY_ID=${env.AWS_ACCESS_KEY_ID} -var AWS_SECRET_ACCESS_KEY=${env.AWS_SECRET_ACCESS_KEY}'
         cleanWs()
       }
     }
