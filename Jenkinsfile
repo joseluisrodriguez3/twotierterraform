@@ -19,7 +19,7 @@ pipeline {
     }
     stage('plan') {
       steps {
-        # Credentials taken from environment directly
+        // AWS Credentials taken from environment directly into provider
         sh 'terraform plan'
       }
     }
@@ -33,6 +33,7 @@ pipeline {
     }
     stage('apply') {
       steps {
+        // AWS Credentials taken from environment directly into provider
         sh 'terraform apply -auto-approve'
         cleanWs()
       }
